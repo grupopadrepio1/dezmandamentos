@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Catequese Permanente - Os Dez Mandamentos</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<style>
+  :root {
+    --gold: #ffd700;
+    --text: #e0e0e0;
+    --primary: #c48989;
+    --accent: #ffd700;
+    --secondary: #f0c0c0;
+  }
+
+  /* Reset e estilo base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+
+  body {
+    font-family: 'Playfair Display', serif;
+    background: linear-gradient(to bottom, #2c3e50, #1a237e);
+    color: var(--text);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    background-attachment: fixed;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="rgba(0,0,0,0.05)" x="0" y="0" width="100" height="100"/><path fill="rgba(255,255,255,0.02)" d="M0 0L100 100M100 0L0 100"/></svg>');
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Slides */
+  .slide {
+    display: none;
+    width: 90vw;
+    max-width: 1400px;
+    /* opcional: evita slides excessivamente largos em telas muito grandes */
+    height: 90vh;
+    max-height: 980px;
+    /* opcional: limita altura em telas muito altas */
+    padding: 2rem;
+    background: #40699e;
+    color: #ffffff;
+    border-radius: 12px;
+    text-align: left;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.25s ease;
+    border: 6px solid #8c6d46;
+    box-sizing: border-box;
+    overflow: auto;
+    /* mantém tamanho fixo e rolagem interna quando necessário */
+  }
+
+  /* mantém o comportamento atual do slide ativo */
+  .slide.active {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 0.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%);
+    }
+
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3.8rem;
+    margin-bottom: 1.2rem;
+    color: var(--gold);
+    /* única cor */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    /* sombra */
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #ffffff;
+  }
+
+  p {
+    color: #e0e0e0;
+    font-size: 1.8rem;
+    line-height: 1.8;
+    margin-bottom: 1.2rem;
+    max-width: 900px;
+    text-align: justify;
+  }
+
+  em {
+    font-style: italic;
+    color: var(--secondary);
+    font-weight: 700;
+  }
+
+  /* Ícones */
+  .icone-seta {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 0.6rem;
+    filter: invert(15%) sepia(90%) saturate(2000%) hue-rotate(215deg) brightness(85%) contrast(95%);
+  }
+
+  .icone-livro {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-right: 0.6rem;
+    filter: invert(15%) sepia(90%) saturate(2000%) hue-rotate(215deg) brightness(85%) contrast(95%);
+  }
+
+  /* Ícone Home */
+  .home-icon {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 35px;
+    height: 35px;
+    background: url('icon/iconehome.svg') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 200;
+    filter: invert(15%) sepia(90%) saturate(2000%) hue-rotate(215deg) brightness(85%) contrast(95%);
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+
+  }
+
+  .home-icon:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  /* Destaque dos mandamentos */
+  .mandamento {
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 2.6rem;
+    text-align: left;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Contêiner para mandamento e imagem do mandamento */
+  .mandamento-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 1.2rem;
+  }
+
+  .mandamento-header .mandamento-titulo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+
+  .mandamento-header .mandamento-imagem {
+    margin-right: 1.2rem;
+  }
+
+  .mandamento-header .mandamento-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    border: 1px solid #d1c7bb;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .texto-mandamento {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 1.9rem;
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 15px;
+    background: #000000;
+    /* faixa preta por trás do mandamento */
+    border-radius: 6px;
+  }
+
+  /* Mandamento com imagem principal (santo) */
+  .mandamento-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+  }
+
+  .mandamento-conteudo .texto {
+    flex: 1;
+    padding-right: 2rem;
+    min-width: 350px;
+  }
+
+  .mandamento-conteudo .imagem {
+    flex: 0 0 280px;
+    text-align: center;
+  }
+
+  .mandamento-conteudo .imagem img {
+    max-width: 100%;
+    max-height: 40vh;
+  }
+
+  /* Logo fixa no canto inferior direito */
+  .logo {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    width: 90px;
+    height: 90px;
+    background: url('logopadrepio.png') no-repeat center;
+    background-size: cover;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    z-index: 200;
+    transition: transform 0.3s ease;
+  }
+
+  .logo:hover {
+    transform: scale(1.05);
+  }
+
+  /* Slide 0: Apresentação */
+  .capa .apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    animation: slideIn 1s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .logo-apresentacao {
+    width: 180px;
+    height: 180px;
+    margin-bottom: 1.8rem;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Slides em duas colunas */
+  .duas-colunas {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .duas-colunas .colunas-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 100%;
+    gap: 1.8rem;
+  }
+
+  .duas-colunas .coluna {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: rgba(234, 242, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(140, 109, 70, 0.3);
+  }
+
+  .duas-colunas .coluna p {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Texto bíblico em fonte pequena */
+  .texto-biblico {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #bdbdbd;
+    margin-top: 0.6rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.4;
+    text-align: justify;
+  }
+
+  /* Navigation Tabs */
+  .navigation-tabs {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 400px;
+    /* agora os botões ficam 250px distantes um do outro */
+    z-index: 200;
+  }
+
+  .nav-tab {
+    background: linear-gradient(to bottom, #3f51b5, #1a237e);
+    color: #fff;
+    border: 2px solid var(--gold);
+    padding: 0.6rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .nav-tab:hover {
+    background: linear-gradient(to bottom, #1a237e, #3f51b5);
+    transform: translateY(-2px);
+  }
+
+  .nav-tab:active {
+    transform: translateY(0);
+  }
+
+  /* Progress bar */
+  .progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 200;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #c62828, #ffd700);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+
+  /* Índice de slides */
+  .slide-indicator {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: var(--gold);
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    z-index: 200;
+    font-family: 'Cinzel', serif;
+    border: 1px solid var(--gold);
+  }
+
+  /* Animações para elementos que aparecem */
+  .fade-in {
+    opacity: 0 !important;
+    /* Força a opacidade inicial como 0 */
+    transform: translateY(15px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    /* Adiciona transição suave */
+  }
+
+  .fade-in.visible {
+    opacity: 1 !important;
+    /* Força a opacidade como 1 quando visível */
+    transform: translateY(0);
+  }
+
+  /* Efeito de iluminação divina */
+  .divine-light {
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+    animation: rotateLight 40s linear infinite;
+  }
+
+  @keyframes rotateLight {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Decorações nas bordas */
+  .corner-decoration {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    pointer-events: none;
+  }
+
+  .corner-top-left {
+    top: 0;
+    left: 0;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+    border-radius: 10px 0 0 0;
+  }
+
+  .corner-top-right {
+    top: 0;
+    right: 0;
+    border-top: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    border-radius: 0 10px 0 0;
+  }
+
+  .corner-bottom-left {
+    bottom: 0;
+    left: 0;
+    border-bottom: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 0 0 10px;
+  }
+
+  .corner-bottom-right {
+    bottom: 0;
+    right: 0;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    border-radius: 0 0 10px 0;
+  }
+
+  /* Estilo para as setas (ajuste mais consistente) */
+  .arrow {
+    display: inline-flex;
+    align-items: flex-start;
+    /* alinha ícone ao topo da primeira linha */
+    gap: 0.5rem;
+    vertical-align: top;
+  }
+
+  .arrow .icone-seta,
+  .arrow img {
+    width: 1em;
+    height: 1em;
+    flex: 0 0 1em;
+    align-self: flex-start;
+    margin-top: 0.28em;
+    /* ajuste fino: entre 0.20em e 0.40em conforme precisar */
+    line-height: 1;
+    vertical-align: text-top;
+    display: inline-block;
+  }
+
+  /* Nota dos mandamentos: CIC + citação bíblica (menor, centralizado) */
+  .mandamento-meta {
+    font-size: 1.1rem;
+    color: #ffd700;
+    /* amarelo */
+    text-align: center;
+    margin-top: 0.4rem;
+    margin-bottom: 0.6rem;
+    font-style: italic;
+  }
+
+  /* Estilização apenas para o texto das reflexões */
+  .reflexao {
+    color: #ffd54f;
+    /* amarelo claro */
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.6rem;
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .reflexao em {
+    font-style: italic;
+    font-weight: 700;
+  }
+
+  /* variação amarela (usada apenas no 2º Mandamento conforme solicitado) */
+  .mandamento-meta--yellow {
+    color: #ffd700;
+    /* amarelo */
+  }
+
+  /* Lightbox / modal para imagem do santo + frase */
+  .lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+  }
+
+  .lightbox-overlay.active {
+    display: flex;
+  }
+
+  /* lightbox-content fixo com painel 90vw x 90vh */
+  .lightbox-content {
+    width: 90vw;
+    height: 90vh;
+    max-width: 1200px;
+    /* opcional: limite em telas muito largas */
+    max-height: 900px;
+    /* opcional: limite em telas muito altas */
+    background: transparent;
+    padding: 0;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* painel preto que envolve a imagem + frase — ocupa todo o content */
+  .lightbox-panel {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    /* fundo preto sólido por trás da foto e da frase */
+    padding: 1.2rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    /* permite rolagem se necessário em telas pequenas */
+    box-sizing: border-box;
+  }
+
+  /* imagem reduzida para caber no painel 90x90, preservando espaço para a frase */
+  .lightbox-image {
+    max-width: calc(100% - 2rem);
+    max-height: calc(100% - 160px);
+    /* reserva ~160px para a frase/botões */
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* frase em destaque embaixo da imagem */
+  .lightbox-quote {
+    color: #ffd54f;
+    font-size: 2rem;
+    /* aumentado para destacar a frase */
+    font-weight: 700;
+    margin-top: 1rem;
+    line-height: 1.3;
+    text-align: center;
+    padding: 0 1rem;
+    background: transparent;
+  }
+
+  /* botão fechar (mantido visível sobre o painel) */
+  .lightbox-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.18);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    z-index: 1010;
+  }
+
+  /* evita que clicar na imagem avance o slide */
+  .mandamento-conteudo .imagem img {
+    cursor: zoom-in;
+    user-select: none;
+  }
+</style>
+
+<body>
+  <!-- Efeito de luz divina -->
+  <div class="divine-light"></div>
+
+  <!-- Barra de progresso -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <!-- Indicador de slide -->
+  <div class="slide-indicator" id="slide-indicator" aria-live="polite"></div>
+
+  <!-- Slide 0: Capa -->
+  <div class="slide active capa" aria-hidden="false">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="apresentacao">
+      <img src="cic-catecismodaigrejacatolica.webp" alt="Catecismo da Igreja Católica" class="logo-apresentacao"
+        loading="lazy">
+      <h3>Grupo de Estudos Católicos</h3>
+      <h1>PADRE PIO</h1>
+      <h2>Os Dez Mandamentos <br> no Catecismo da Igreja Católica</h2>
+      <p class="fade-in">Fundamento da moral cristã e caminho de liberdade e santidade.</p>
+      <p class="fade-in"><em>CIC 2052-2082</em></p>
+    </div>
+  </div>
+
+
+
+
+  <!-- Slide 0.5: O Que Já Vimos -->
+<div class="slide"> <!-- removido 'active' duplicado -->
+  <h1 style="text-align:center; color:#FFFFFF;">Temas Estudados</h1>
+  <div class="duas-colunas">
+    <div class="colunas-container" style="display:flex; gap:20px;">
+
+      <!-- Coluna 1 -->
+      <div class="coluna" style="flex:1; display:flex; flex-direction:column; gap:15px;">
+        <div style="background-color:#000000; padding:10px; border-radius:8px;">
+          <p style="font-weight:bold; color:#FFFFFF;">Fundamentos da Fé Católica</p>
+          <ul style="margin:0; padding-left:1.2em; color:#FFFFFF;">
+            <li>Introdução ao Catecismo da Igreja Católica</li>
+            <li>A Revelação de Deus</li>
+            <li>A Trindade</li>
+            <li>A Criação e a Providência Divina</li>
+            <li>O Pecado Original e suas Consequências</li>
+            <li>A Missão de Jesus Cristo</li>
+          </ul>
+        </div>
+
+        <div style="background-color:#000000; padding:10px; border-radius:8px;">
+          <p style="font-weight:bold; color:#FFFFFF;">Os Sacramentos e a Vida Cristã</p>
+          <ul style="margin:0; padding-left:1.2em; color:#FFFFFF;">
+            <li>Introdução aos Sacramentos</li>
+            <li>O Batismo</li>
+            <li>A Eucaristia</li>
+            <li>A Confirmação</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Coluna 2 -->
+      <div class="coluna" style="flex:1; display:flex; flex-direction:column; gap:15px;">
+        <div style="background-color:#000000; padding:10px; border-radius:8px;">
+          <p style="font-weight:bold; color:#FFFFFF;">Os Sacramentos e a Vida Cristã (continuação)</p>
+          <ul style="margin:0; padding-left:1.2em; color:#FFFFFF;">
+            <li>Matrimônio e Ordem</li>
+            <li>Unção dos Enfermos e Penitência</li>
+          </ul>
+        </div>
+
+        <div style="background-color:#000000; padding:10px; border-radius:8px;">
+          <p style="font-weight:bold; color:#FFFFFF;">Moral Cristã e os Dez Mandamentos</p>
+          <ul style="margin:0; padding-left:1.2em; color:#FFFFFF;">
+            <li>A Vida Cristã</li>
+            <li>O Amor a Deus e ao Próximo</li>
+            <li>Os Dez Mandamentos</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  <!-- Slide 1: Introdução -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Introdução</h2>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Os Dez
+      Mandamentos, ou “Decálogo” são as “Dez Palavras” de Deus. (Ex 34,28)</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Não são
+      restrições, mas um caminho de liberdade, vida plena e felicidade (CIC 2057).</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Deus entrega a
+      Lei como aliança de amor, convidando-nos à confiança filial (CIC 2052-2055).</p><br>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta"><em>Como os
+        Mandamentos nos libertam hoje?</em></p>
+  </div>
+
+
+  <!-- Slide 2: Duas Versões Bíblicas -->
+  <div class="slide duas-colunas" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+
+    <h2 style="font-size: 2.4em;">Duas Versões Bíblicas</h2>
+    <p class="arrow fade-in" style="font-size: 1.6em;">
+      <img src="icon/arrow-sm-right-svgrepo-com.svg" alt="" class="icone-seta">
+      A mesma Lei apresentada em dois momentos diferentes da história de Israel (CIC 2056-2063)
+    </p>
+
+    <div class="colunas-container">
+      <div class="coluna">
+        <p class="arrow fade-in" style="font-size: 1.8em;">
+          <img src="icon/arrow-sm-right-svgrepo-com.svg" alt="" class="icone-seta">
+          <strong>Êxodo</strong>
+        </p>
+        <ul class="fade-in" style="font-size: 1.4em; line-height: 1.9em;">
+          <li><strong>Contexto:</strong> povo recém-liberto da escravidão no Egito</li>
+          <li><strong>Foco:</strong> <strong>libertação</strong> e poder de Deus como salvador</li>
+          <li><strong>Propósito:</strong> estabelecer a Lei como guia de vida para um povo livre</li>
+        </ul>
+        <p class="texto-biblico fade-in" style="font-size: 1.5em;">
+          “Eu sou o Senhor, teu Deus, que te tirei da terra do Egito.” (Ex 20,2)
+        </p>
+      </div>
+
+      <div class="coluna">
+        <p class="arrow fade-in" style="font-size: 1.8em;">
+          <img src="icon/arrow-sm-right-svgrepo-com.svg" alt="" class="icone-seta">
+          <strong>Deuteronômio</strong>
+        </p>
+        <ul class="fade-in" style="font-size: 1.4em; line-height: 1.9em;">
+          <li><strong>Contexto:</strong> antes da entrada na Terra Prometida</li>
+          <li><strong>Foco:</strong> <strong>fidelidade</strong> à Aliança com Deus</li>
+          <li><strong>Propósito:</strong> renovar o compromisso do povo com a Lei</li>
+        </ul>
+        <p class="texto-biblico fade-in" style="font-size: 1.5em;">
+          “Eu sou o Senhor, teu Deus, que te tirei da terra do Egito.” (Dt 5,6)
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+
+  
+
+
+  
+
+
+
+  <!-- Slide 3: Lei Natural e Tradição -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Lei Natural e Tradição</h2>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">O Decálogo
+      reflete a lei natural inscrita no coração humano, acessível pela razão (CIC 1954-1955; Rm 2,14-15).</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">A Igreja
+      preserva e interpreta a Lei na Tradição viva: Padres, Concílios, Magistério (CIC 2064-2068).</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">“A Lei é
+      remédio para o orgulho e caminho para a caridade” (Santo Agostinho, CIC 2065).</p>
+  </div>
+
+
+  <!-- Slide 4: Divisão dos Mandamentos -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Divisão dos Dez Mandamentos</h2>
+    <h3>CIC 2066-2067; Mt 22,37-40</h3>
+    <br>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta"><strong>1.
+        Deveres para com Deus (1-3): <br> Amor, adoração e fidelidade a Deus.</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta"><strong>2.
+        Deveres para com o próximo – pessoa e família (4-6): <br> Respeito e harmonia.</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta"><strong>3.
+        Deveres para com o próximo – bens e verdade (7-10): <br> Integridade e justiça.</p>
+
+  </div>
+
+  <!-- Slide 5: Fundamentação Catequética e Bíblica -->
+  <div class="slide duas-colunas" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Fundamentação Catequética e Bíblica</h2>
+    <div class="colunas-container">
+      <div class="coluna">
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">1º
+          Mandamento<br>CIC 2083–2141 → Ex 20,2-5; Dt 5,6-9</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">2º
+          Mandamento<br>CIC 2142–2167 → Ex 20,7; Dt 5,11</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">3º
+          Mandamento<br>CIC 2168–2195 → Ex 20,8-11; Dt 5,12-15</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">4º
+          Mandamento<br>CIC 2196–2257 → Ex 20,12; Dt 5,16</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">5º
+          Mandamento<br>CIC 2258–2330 → Ex 20,13; Dt 5,17</p>
+      </div>
+      <div class="coluna">
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">6º
+          Mandamento<br>CIC 2331–2400 → Ex 20,14; Dt 5,18</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">7º
+          Mandamento<br>CIC 2401–2463 → Ex 20,15; Dt 5,19</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">8º
+          Mandamento<br>CIC 2464–2513 → Ex 20,16; Dt 5,20</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">9º
+          Mandamento<br>CIC 2514–2533 → Ex 20,17; Dt 5,21</p>
+        <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">10º
+          Mandamento<br>CIC 2534–2557 → Ex 20,17; Dt 5,21</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Tabs Before Commandment Slides -->
+  <div class="navigation-tabs">
+    <button class="nav-tab" id="prev-tab" aria-label="Slide anterior">◄ Voltar</button>
+    <button class="nav-tab" id="next-tab" aria-label="Próximo slide">Avançar ►</button>
+  </div>
+
+  <!-- Slide 6: 1º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/1.png" alt="1º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">1º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        terás outros deuses diante de mim</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2083-2141</em> — Ex 20,2-5; Dt 5,6-9</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Fidelidade exclusiva e amor total a Deus, rejeitando idolatrias modernas.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> O que ocupa o lugar de Deus em meu coração?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/1-São Tomás de Aquino.png" alt="São Tomás de Aquino" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: 2º Mandamento (já no modelo solicitado) -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/2.png" alt="2º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">2º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        pronunciarás o nome de Deus em vão</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento (cor amarela) -->
+      <p class="fade-in mandamento-meta mandamento-meta--yellow"><em>CIC 2142-2167</em> — Ex 20,7; Dt 5,11</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Respeito e reverência pelo nome de Deus, evitando blasfêmias e juramentos falsos.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como uso o nome de Deus no meu dia a dia?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/2-Santa Catarina de Sena.png" alt="Santa Catarina de Sena" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8: 3º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/3.png" alt="3º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">3º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro"
+          class="icone-livro">Guardarás o dia do Senhor</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2168-2195</em> — Ex 20,8-11; Dt 5,12-15</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Dedicar o domingo à oração, descanso e comunhão com Deus e a comunidade.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como santifico o domingo?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/3-São João Crisóstomo.png" alt="São João Crisóstomo" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 9: 4º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/4.png" alt="4º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">4º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Honrarás
+        teu pai e tua mãe</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2196-2257</em> — Ex 20,12; Dt 5,16</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Respeito e gratidão aos pais, família e autoridades, promovendo harmonia.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como demonstro gratidão à minha família?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/4-Santa Teresinha de Lisieux.png" alt="Santa Teresinha de Lisieux"
+          loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 10: 5º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/5.png" alt="5º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">5º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        matarás</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2258-2330</em> — Ex 20,13; Dt 5,17</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Respeito pela vida humana, desde a concepção até a morte natural.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como promovo a dignidade da vida?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/5-São Francisco de Assis.png" alt="São Francisco de Assis" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 11: 6º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/6.png" alt="6º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">6º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        cometerás adultério</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2331-2400</em> — Ex 20,14; Dt 5,18</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Fidelidade e pureza no amor, respeitando a dignidade do matrimônio.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como vivo a castidade no meu estado de vida?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/6-Santa Gianna Beretta Molla.png" alt="Santa Gianna Beretta Molla"
+          loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 12: 7º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/7.png" alt="7º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">7º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        furtarás</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2401-2463</em> — Ex 20,15; Dt 5,19</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Respeito pelos bens alheios e promoção da justiça social.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como partilho meus bens com os necessitados?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/7-São José de Cupertino.png" alt="São José de Cupertino" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 13: 8º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/8.png" alt="8º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">8º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        darás falso testemunho</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2464-2513</em> — Ex 20,16; Dt 5,20</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Compromisso com a verdade, evitando mentiras e calúnias.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como busco a verdade em minhas palavras?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/8-São Tomás Becket.png" alt="São Tomás Becket" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 14: 9º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/9.png" alt="9º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">9º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        desejarás a mulher do próximo</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2514-2533</em> — Ex 20,17; Dt 5,21</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Pureza de coração, evitando desejos impuros e respeitando a dignidade alheia.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como cultivo a pureza em meus pensamentos?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/9-Santa Maria Goretti.png" alt="Santa Maria Goretti" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 15: 10º Mandamento -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <div class="mandamento-header">
+      <div class="mandamento-titulo">
+        <div class="mandamento-imagem">
+          <img src="img10mandamentos/10.png" alt="10º Mandamento" class="mandamento-icon" loading="lazy">
+        </div>
+        <div class="mandamento">10º Mandamento</div>
+      </div>
+      <div class="texto-mandamento"><img src="icon/book-opened-svgrepo-com.svg" alt="Livro" class="icone-livro">Não
+        cobiçarás os bens do próximo</div>
+
+      <!-- nota CIC colocada aqui, abaixo do mandamento -->
+      <p class="fade-in mandamento-meta"><em>CIC 2534-2557</em> — Ex 20,17; Dt 5,21</p>
+    </div>
+    <div class="mandamento-conteudo">
+      <div class="texto">
+        <p class="fade-in">Contentamento com o que se tem, evitando inveja e ganância.</p>
+        <p class="fade-in reflexao"><em>Reflexão:</em> Como pratico o desapego material?</p>
+      </div>
+      <div class="imagem">
+        <img src="fotossantos-circulares/10-São Bento de Núrsia.png" alt="São Bento de Núrsia" loading="lazy">
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 16: Centralidade em Cristo -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Centralidade em Cristo</h2>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Jesus cumpre a
+      Lei: “Não vim abolir, mas dar-lhe pleno cumprimento” (Mt 5,17).</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">O mandamento
+      do amor (Mt 22,37-40) é a plenitude do Decálogo.</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Em Cristo, a
+      Lei torna-se Evangelho vivo pela graça do Espírito (CIC 2074).</p>
+  </div>
+
+  <!-- Slide 17: Conclusão -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Conclusão</h2>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Os Mandamentos
+      são caminho de liberdade, santidade e beatitude (CIC 2057).</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Vividos na
+      graça dos sacramentos e na comunidade eclesial.</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta"><em>“Sede
+        perfeitos como o Pai é perfeito” (Mt 5,48).</em></p>
+  </div>
+
+  <!-- Slide 18: Referências -->
+  <div class="slide" aria-hidden="true">
+    <div class="corner-decoration corner-top-left"></div>
+    <div class="corner-decoration corner-top-right"></div>
+    <div class="corner-decoration corner-bottom-left"></div>
+    <div class="corner-decoration corner-bottom-right"></div>
+    <div class="home-icon" role="button" aria-label="Voltar para a capa"></div>
+    <h2>Referências</h2>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Catecismo da
+      Igreja Católica: 2052-2557.</p>
+    <p class="arrow fade-in"><img src="icon/arrow-sm-right-svgrepo-com.svg" alt="Seta" class="icone-seta">Bíblia: Êxodo
+      20; Deuteronômio 5; Mt 5,17-48; Mt 22,37-40; Rm 13,8-10.</p>
+  </div>
+
+  <!-- Logo fixa -->
+  <div class="logo" role="img" aria-label="Logo Padre Pio"></div>
+
+  <!-- inserir logo/modal HTML antes do script (após a lista de slides e logo) -->
+  <div class="lightbox-overlay" id="lightbox" aria-hidden="true" role="dialog" aria-label="Imagem do santo">
+    <div class="lightbox-content" role="document">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">✕</button>
+
+      <!-- painel preto que contém a imagem e a frase -->
+      <div class="lightbox-panel" role="presentation">
+        <img src="" alt="" id="lightboxImg" class="lightbox-image">
+        <div id="lightboxQuote" class="lightbox-quote"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let currentSlideIndex = 0;
+    let currentItemIndex = 0;
+
+    // inicialização acessível: tabindex, aria-hidden e aria-label a partir do heading
+    slides.forEach((s, i) => {
+      const heading = s.querySelector('h1, h2, h3, h4');
+      const title = heading ? heading.textContent.trim().replace(/\s+/g, ' ') : `Slide ${i + 1}`;
+      s.setAttribute('data-slide-title', title); // opcional: informação visível no DOM
+      s.setAttribute('aria-label', title);
+
+      // active recebe tabindex 0 para foco; demais -1
+      if (s.classList.contains('active')) {
+        s.setAttribute('tabindex', '0');
+        s.setAttribute('aria-hidden', 'false');
+      } else {
+        s.setAttribute('tabindex', '-1');
+        s.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // Atualiza a barra de progresso e indicador de slide
+    function updateProgress() {
+      const progressBar = document.getElementById('progress');
+      const slideIndicator = document.getElementById('slide-indicator');
+
+      if (progressBar && slideIndicator) {
+        const progress = ((currentSlideIndex + 1) / slides.length) * 100;
+        progressBar.style.width = `${progress}%`;
+        slideIndicator.textContent = `${currentSlideIndex + 1}/${slides.length}`;
+      }
+    }
+
+    function hideAllItems(slide) {
+      slide.querySelectorAll('.fade-in').forEach(item => item.classList.remove('visible'));
+    }
+
+    function showItemsUpTo(slide, count) {
+      const items = Array.from(slide.querySelectorAll('.fade-in'));
+      items.forEach((it, i) => {
+        if (i < count) it.classList.add('visible');
+        else it.classList.remove('visible');
+      });
+    }
+
+    // Mostra o próximo item do slide atual (retorna true se mostrou um item)
+    function showNextItem() {
+      const currentSlide = slides[currentSlideIndex];
+      const items = Array.from(currentSlide.querySelectorAll('.fade-in'));
+      if (items.length === 0) return false;
+      if (currentItemIndex < items.length) {
+        items[currentItemIndex].classList.add('visible');
+        currentItemIndex++;
+        return true;
+      }
+      return false;
+    }
+
+    // Mostra slide específico e esconde itens — agora atualiza aria-hidden e foco
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      slides.forEach((s, i) => {
+        s.classList.remove('active');
+        s.setAttribute('aria-hidden', 'true');
+      });
+      const target = slides[index];
+      target.classList.add('active');
+      target.setAttribute('aria-hidden', 'false');
+      // foco programático para leitores de tela / teclado
+      target.focus();
+      currentSlideIndex = index;
+      currentItemIndex = 0;
+      hideAllItems(target);
+      updateProgress();
+    }
+
+    // Avança: primeiro tenta mostrar próximo item; se não houver, muda de slide
+    function nextSlide() {
+      const shown = showNextItem();
+      if (!shown && currentSlideIndex < slides.length - 1) {
+        showSlide(currentSlideIndex + 1);
+      }
+    }
+
+    // Retrocede: item a item; se no início do slide, vai para o slide anterior
+    function prevSlide() {
+      const currentSlide = slides[currentSlideIndex];
+      const items = Array.from(currentSlide.querySelectorAll('.fade-in'));
+      if (currentItemIndex > 0) {
+        // volta um item
+        currentItemIndex--;
+        showItemsUpTo(currentSlide, currentItemIndex);
+      } else if (currentSlideIndex > 0) {
+        // vai para slide anterior e mostra todos os itens dele
+        showSlide(currentSlideIndex - 1);
+        const prev = slides[currentSlideIndex];
+        const prevItems = Array.from(prev.querySelectorAll('.fade-in'));
+        showItemsUpTo(prev, prevItems.length);
+        currentItemIndex = prevItems.length;
+      }
+    }
+
+    // Clique em home — torna foco/teclado acessível também
+    document.querySelectorAll('.home-icon').forEach(icon => {
+      // garante foco por teclado
+      if (!icon.hasAttribute('tabindex')) icon.setAttribute('tabindex', '0');
+      icon.addEventListener('click', () => showSlide(0));
+      icon.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.code === 'Space' || e.key === ' ') {
+          e.preventDefault();
+          showSlide(0);
+        }
+      });
+    });
+
+    // Eventos de teclado: previne default no espaço
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') nextSlide();
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+      if (e.key === 'Home') showSlide(0);
+      if (e.key === 'End') {
+        showSlide(slides.length - 1);
+        const last = slides[slides.length - 1];
+        const items = Array.from(last.querySelectorAll('.fade-in'));
+        showItemsUpTo(last, items.length);
+        currentItemIndex = items.length;
+      }
+      // aceita e.key ' ' e e.code 'Space' para compatibilidade
+      if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault(); // evita scroll/efeitos indesejados
+        nextSlide();
+      }
+    });
+
+    // Navegação por botões
+    const prevTab = document.getElementById('prev-tab');
+    const nextTab = document.getElementById('next-tab');
+    if (prevTab) prevTab.addEventListener('click', prevSlide);
+    if (nextTab) nextTab.addEventListener('click', nextSlide);
+
+    // Clique em home
+    document.querySelectorAll('.home-icon').forEach(icon => {
+      icon.addEventListener('click', () => showSlide(0));
+    });
+
+    // Clique esquerdo/direito nos slides — ignorar clicks em elementos interativos
+    document.querySelectorAll('.slide').forEach(slide => {
+      slide.addEventListener('click', e => {
+        if (e.target.closest('button, a, .home-icon, .nav-tab')) return;
+        nextSlide();
+      });
+      slide.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        prevSlide();
+      });
+    });
+
+    // Lightbox: abrir imagem do santo + frase de apoio ao mandamento
+    (function () {
+      const lightbox = document.getElementById('lightbox');
+      const lbImg = document.getElementById('lightboxImg');
+      const lbQuote = document.getElementById('lightboxQuote');
+      const lbClose = document.getElementById('lightboxClose');
+
+      // frases de apoio (mandamentos 1..10 correspondem aos slides 6..15)
+      const quotes = [
+        "Já que Deus é a verdade, invocá-Lo é adorá-Lo em espírito e verdade, segundo João 4,23. Assim, uma adoração que contém falsidade é inconsistente com uma invocação salutar de Deus.",
+        "Na Páscoa e dias solenes, glorifique o Nome de Deus com o Ofício Divino e ações humildes e devotas.",
+        "Você não pode orar em casa como na igreja, onde há uma grande multidão, onde exclamações são elevadas a Deus como se viessem de um só coração.",
+        "Nosso Senhor dignou-se a fazer-me entender que, pela simples obediência, eu O agradarei mais.",
+        "Todo louvor seja Vosso, meu Senhor, por nossa Irmã Morte, de cujo abraço nenhum mortal pode escapar. Ai daqueles que morrem em pecado mortal! Felizes aqueles que Ela encontra cumprindo Vossa vontade! A segunda morte não pode lhes fazer mal.",
+        "Com a ajuda e a bênção de Deus, faremos tudo o que pudermos para criar uma nova família, um pequeno cenáculo onde Jesus reine sobre nossos afetos, desejos e ações.",
+        "Quando um homem se exercita em atos de virtude, certamente é com a ajuda da graça de Deus, de quem vêm todas as coisas boas.",
+        "Toda a companhia dos santos testemunha a verdade infalível de que, sem esforço real, ninguém conquista a coroa.",
+        "Não! É pecado! Deus não quer isso!",
+        "Especialmente, esse vício da posse privada deve ser cortado do mosteiro pela raiz; e que ninguém presuma dar ou aceitar algo sem a ordem do abade, nem ter algo como próprio..."
+      ];
+
+      // abre lightbox com a imagem e frase apropriada
+      function openLightbox(imgEl) {
+        const slideEl = imgEl.closest('.slide');
+        // índice do slide na NodeList slides (mesmas variáveis do script)
+        const slidesList = Array.from(document.querySelectorAll('.slide'));
+        const slideIndex = slidesList.indexOf(slideEl); // 6..15 -> mandamentos 1..10
+        let quoteText = '';
+        if (slideIndex >= 6 && slideIndex <= 15) {
+          quoteText = quotes[slideIndex - 6];
+        } else {
+          quoteText = ''; // fallback vazio
+        }
+
+        lbImg.src = imgEl.src;
+        lbImg.alt = imgEl.alt || '';
+        lbQuote.textContent = quoteText;
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        // previne que o click na imagem propague para o slide e avance
+        // foco para acessibilidade
+        lbClose.focus();
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        lbImg.src = '';
+        lbQuote.textContent = '';
+        document.body.style.overflow = '';
+      }
+
+      // delegação: adiciona listener a todas as imagens dos santos
+      document.querySelectorAll('.mandamento-conteudo .imagem img').forEach(img => {
+        img.addEventListener('click', function (e) {
+          e.stopPropagation(); // evita avançar slide
+          e.preventDefault();
+          openLightbox(this);
+        });
+      });
+
+      // fechar ao clicar no overlay fora do conteúdo
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      lbClose.addEventListener('click', closeLightbox);
+
+      // tecla ESC fecha
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+          closeLightbox();
+        }
+      });
+    })();
+
+    // Inicializa: esconde itens de todos os slides e mostra o primeiro slide
+    slides.forEach(s => hideAllItems(s));
+    showSlide(0);
+  </script>
+
+
+
+</body>
+
+</html>
